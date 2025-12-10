@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>تعديل العملية المالية</title>
+    <style>
+        body { font-family: Tahoma; background: #f4f4f4; padding: 30px; }
+        form { background: white; padding: 25px; border-radius: 10px; width: 400px; margin: auto; box-shadow: 0 3px 10px #ccc; }
+        h2 { text-align: center; color: #2c3e50; }
+        input, select, textarea { width: 100%; margin: 10px 0; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
+        button { width: 100%; padding: 10px; border: none; border-radius: 6px; cursor: pointer; }
+        .save { background: #27ae60; color: white; }
+        .cancel { background: #e74c3c; color: white; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+    <h2>✏️ تعديل العملية المالية</h2>
+
+    <form method="POST">
+        <input type="date" name="date" value="{{ trans.date }}" required>
+
+        <select name="type">
+            <option value="income" {% if trans.type == 'income' %}selected{% endif %}>إيراد</option>
+            <option value="expense" {% if trans.type == 'expense' %}selected{% endif %}>مصروف</option>
+        </select>
+
+        <input type="number" step="0.01" name="amount" value="{{ trans.amount }}" required>
+
+        <select name="currency">
+            <option value="EGP" {% if trans.currency == 'EGP' %}selected{% endif %}>جنيه مصري (EGP)</option>
+            <option value="USD" {% if trans.currency == 'USD' %}selected{% endif %}>دولار أمريكي (USD)</option>
+            <option value="EUR" {% if trans.currency == 'EUR' %}selected{% endif %}>يورو (EUR)</option>
+            <option value="SAR" {% if trans.currency == 'SAR' %}selected{% endif %}>ريال سعودي (SAR)</option>
+        </select>
+
+        <textarea name="description">{{ trans.description }}</textarea>
+
+        <button type="submit" class="save">💾 حفظ التعديلات</button>
+        <a href="{{ url_for('finance') }}"><button type="button" class="cancel">⬅️ إلغاء</button></a>
+    </form>
+
+</body>
+</html>

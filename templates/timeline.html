@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <title>تقويم الحجوزات</title>
+
+    <!-- FullCalendar + Scheduler v5 -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.css" rel="stylesheet" />
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Tahoma, sans-serif;
+            direction: rtl;
+            background: linear-gradient(135deg, #3f51b5, #2196f3, #6dd5fa);
+            min-height: 100vh;
+        }
+
+        h2 {
+            text-align: center;
+            color: #fff;
+            padding: 25px 0 10px;
+            font-size: 30px;
+            font-weight: bold;
+            text-shadow: 0 2px 6px #0003;
+        }
+
+        /* ---- الإحصائيات ---- */
+        #stats-box {
+            max-width: 1200px;
+            margin: 10px auto;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            flex: 1;
+            min-width: 180px;
+            background: #ffffffcc;
+            backdrop-filter: blur(5px);
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 3px 10px #0002;
+        }
+
+        .stat span {
+            font-size: 20px;
+        }
+
+        /* ---- التقويم ---- */
+        #calendar-wrapper {
+            max-width: 1200px;
+            margin: 25px auto;
+            background: #ffffffdd;
+            backdrop-filter: blur(6px);
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.20);
+        }
+
+        #calendar {
+            background: #fff;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .fc-scrollgrid,
+        .fc-timeline-slot,
+        .fc-timeline-lane {
+            font-size: 14px;
+        }
+    </style>
+    <style>
+.fc-toolbar-title {
+    color: #000 !important;
+}
+ </style>
+    <style>
+    /* خط فاصل واضح جداً بين الأيام */
+    .fc-col-header-cell, 
+    .fc-timeline-slot {
+        border-color: #333 !important;
+        border-width: 2px !important;
+    }
+
+    /* فواصل رأس الجدول */
+    .fc-col-header-cell {
+        background: #e9e9e9 !important;
+        font-weight: bold;
+    }
+
+    /* شريط الأيام — فواصل عمودية واضحة */
+    .fc-timeline-slot {
+        border-right: 2px solid #333 !important;
+    }
+
+    /* تمييز خلفية كل يوم (زي شطرنج خفيف) */
+    .fc-timeline-slots .fc-timeline-slot:nth-child(odd) {
+        background: #f7f7f7 !important;
+    }
+    .fc-timeline-slots .fc-timeline-slot:nth-child(even) {
+        background: #efefef !important;
+    }
+    </style>
+</head>
+
+<body>
+
+    <h2>📅 تقويم الحجوزات</h2>
+
+    <!-- الإحصائيات -->
+    <div id="stats-box">
+        <div class="stat available">🟢 متاحة: <span id="s-available">0</span></div>
+        <div class="stat booked">🔴 محجوزة: <span id="s-booked">0</span></div>
+        <div class="stat maintenance">🟡 صيانة: <span id="s-maintenance">0</span></div>
+        <div class="stat total">🏨 الغرف: <span id="s-rooms">0</span></div>
+        <div class="stat bookings">📘 الحجوزات: <span id="s-bookings">0</span></div>
+    </div>
+
+    <div id="calendar-wrapper">
+        <div id="calendar"></div>
+    </div>
+
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            /* تحميل الإحصائيات */
+            fetch("/api/stats")
+                .then(r => r.json())
+                .then(data => {
+                    document.getElementById("s-available").textContent = data.available;
+                    document.getElementById("s-booked").textContent = data.booked;
+                    document.getElementById("s-maintenance").textContent = data.maintenance;
+                    document.getElementById("s-rooms").textContent = data.total_rooms;
+                    document.getElementById("s-bookings").textContent = data.total_bookings;
+                });
+
+            const calendarEl = document.getElementById("calendar");
+
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+
+                schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+                locale: "en",
+                direction: "rtl",
+
+                initialView: "resourceTimelineDay",
+
+                headerToolbar: {
+                    left: "prev,next today",
+                    center: "title",
+                    right: "resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth"
+                },
+
+                slotDuration: { days: 1 },
+
+                slotLabelFormat: [
+    { day: '2-digit', month: '2-digit', year: 'numeric' }
+],
+
+                resources: "/api/rooms_tl",
+                events: "/api/bookings_tl",
+
+                selectable: true,
+
+                /* إضافة حجز */
+                select: function(info) {
+                    const room = info.resource.id;
+                    const start = info.startStr;
+                    const end = info.endStr;
+
+                    window.location.href = `/add_booking?room=${room}&start=${start}&end=${end}`;
+                },
+            eventDidMount: function(info) {
+    const price = info.event.extendedProps.price || "غير محدد";
+    const notes = info.event.extendedProps.notes || "لا توجد ملاحظات";
+
+    let tooltip = document.createElement("div");
+    tooltip.className = "fc-tooltip";
+    tooltip.style.position = "absolute";
+    tooltip.style.background = "#333";
+    tooltip.style.color = "#fff";
+    tooltip.style.padding = "8px 12px";
+    tooltip.style.fontSize = "13px";
+    tooltip.style.borderRadius = "6px";
+    tooltip.style.whiteSpace = "normal";
+    tooltip.style.display = "none";
+    tooltip.style.zIndex = "1000";
+
+    tooltip.innerHTML = `
+        <strong>💵 السعر:</strong> ${price}<br>
+        <strong>📝 الملاحظات:</strong> ${notes}
+    `;
+
+    info.el.appendChild(tooltip);
+
+    // إظهار الـ tooltip
+    info.el.addEventListener("mouseenter", () => {
+        tooltip.style.display = "block";
+    });
+
+    // إخفاء الـ tooltip
+    info.el.addEventListener("mouseleave", () => {
+        tooltip.style.display = "none";
+    });
+},
+
+                /* تعديل حجز */
+                eventClick: function(info) {
+                    const id = info.event.id;
+                    window.location.href = `/edit_booking/${id}`;
+                }
+            });
+
+            calendar.render();
+        });
+    </script>
+
+</body>
+</html>

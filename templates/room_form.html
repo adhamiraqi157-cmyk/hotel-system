@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <title>{{ action if action else "إضافة" }} غرفة</title>
+
+    <style>
+        body {
+            font-family: Tahoma, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 25px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: auto;
+        }
+
+        .card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-size: 24px;
+        }
+
+        label {
+            margin-top: 10px;
+            font-weight: bold;
+            display: block;
+            color: #34495e;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            margin-bottom: 14px;
+            border: 1px solid #d0d0d0;
+            border-radius: 6px;
+            font-size: 15px;
+            background: #fafafa;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #2980b9;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #216896;
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 12px;
+            text-decoration: none;
+            color: #555;
+        }
+
+        .back:hover {
+            color: #000;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="card">
+
+        <h2>{{ action if action else "إضافة" }} غرفة</h2>
+
+        <form method="POST">
+
+            <label>رقم الغرفة</label>
+            <input type="text" name="number" value="{{ room.number if room else '' }}" required>
+
+            <label>نوع الغرفة</label>
+            <input type="text" name="type" placeholder="Single, Double, Suite"
+                   value="{{ room.type if room else '' }}" required>
+
+            <label>السعر</label>
+            <input type="number" name="price" value="{{ room.price if room else '' }}" required>
+
+            <label>الحالة</label>
+            <select name="status">
+                <option value="available" 
+                    {% if room and room.status=='available' %}selected{% endif %}>متاحة</option>
+
+                <option value="booked"
+                    {% if room and room.status=='booked' %}selected{% endif %}>محجوزة</option>
+
+                <option value="maintenance"
+                    {% if room and room.status=='maintenance' %}selected{% endif %}>صيانة</option>
+            </select>
+
+            <button type="submit">{{ action if action else "إضافة" }}</button>
+
+        </form>
+
+        <a href="{{ url_for('rooms_list') }}" class="back">🔙 الرجوع لقائمة الغرف</a>
+
+    </div>
+</div>
+
+</body>
+</html>

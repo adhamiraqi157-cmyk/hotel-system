@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>SAMA HOTEL - لوحة التحكم</title>
+
+    <!-- Google Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        body {
+            direction: rtl;
+            font-family: sans-serif;
+            background: #f1f1f1;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background: #34495e;
+            color: white;
+            padding: 25px;
+            font-size: 30px;
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 30px;
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            width: 260px;
+            height: 160px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            padding: 25px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+
+        .card .icon {
+            font-size: 48px;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        SAMA HOTEL — لوحة التحكم
+    </div>
+
+    <div class="container">
+
+        <a href="/rooms">
+            <div class="card">
+                <span class="material-icons icon">meeting_room</span>
+                <div class="title">إدارة الغرف</div>
+            </div>
+        </a>
+
+        <a href="/add_booking">
+            <div class="card">
+                <span class="material-icons icon">post_add</span>
+                <div class="title">إضافة حجز جديد</div>
+            </div>
+        </a>
+
+        <a href="/calendar">
+            <div class="card">
+                <span class="material-icons icon">calendar_today</span>
+                <div class="title">تقويم الحجوزات</div>
+            </div>
+        </a>
+
+        <a href="/timeline">
+            <div class="card">
+                <span class="material-icons icon">timeline</span>
+                <div class="title">التايم لاين</div>
+            </div>
+        </a>
+
+        <a href="/login">
+            <div class="card">
+                <span class="material-icons icon">logout</span>
+                <div class="title">تسجيل الخروج</div>
+            </div>
+        </a>
+<a href="{{ url_for('import_reservations') }}" class="card">
+    <h3>📥 استيراد الحجوزات</h3>
+    <p>رفع ملف الحجوزات من Booking</p>
+</a>
+
+    </div>
+<a href="/finance">
+    <div class="card">
+        <span class="material-icons icon">account_balance_wallet</span>
+        <div class="title">النظام المالي</div>
+    </div>
+</a>
+
+</body>
+</html>

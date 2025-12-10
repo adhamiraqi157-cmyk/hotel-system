@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>تعديل الحجز</title>
+
+    <style>
+        body {
+            font-family: "Tahoma", sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+        }
+
+        .card {
+            background: #fff;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        label {
+            display: block;
+            margin: 12px 0 6px;
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #dfe6e9;
+            font-size: 15px;
+            box-sizing: border-box;
+            background: #fafafa;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2980b9;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 18px;
+            border: none;
+            border-radius: 8px;
+            background: #2980b9;
+            color: white;
+            font-size: 17px;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        button:hover {
+            background: #1c6691;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            text-decoration: none;
+            color: #2c3e50;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="container">
+        <div class="card">
+
+            <h2>✏ تعديل بيانات الحجز</h2>
+
+            <form method="POST">
+
+                <label>اسم العميل:</label>
+                <input type="text" name="customer_name" value="{{ booking.customer.name }}" required>
+
+                <label>رقم الهاتف:</label>
+                <input type="text" name="phone" value="{{ booking.customer.phone }}" required>
+
+                <label>رقم جواز السفر:</label>
+                <input type="text" name="passport" value="{{ booking.customer.passport }}" required>
+
+                <label>الجنسية:</label>
+                <input type="text" name="nationality" value="{{ booking.customer.nationality }}" required>
+
+                <label>اختر الغرفة:</label>
+                <select name="room_id" required>
+                    {% for room in rooms %}
+                        <option value="{{ room.id }}" {% if room.id == booking.room_id %}selected{% endif %}>
+                            غرفة {{ room.number }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <label>تاريخ الدخول:</label>
+                <input type="date" name="start" value="{{ booking.check_in[:10] }}" required>
+
+                <label>تاريخ الخروج:</label>
+                <input type="date" name="end" value="{{ booking.check_out[:10] }}" required>
+<label>السعر:</label>
+<input type="number" step="0.01" name="price" value="{{ booking.price }}" required>
+
+<label>ملاحظات:</label>
+<textarea name="notes" style="width:100%;height:80px;">{{ booking.notes }}</textarea>
+
+                <button type="submit">💾 حفظ التعديلات</button>
+
+            </form>
+
+            <a class="back-link" href="/timeline">العودة إلى التايم لاين</a>
+
+        </div>
+    </div>
+
+</body>
+</html>

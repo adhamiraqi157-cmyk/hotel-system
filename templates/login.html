@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>تسجيل الدخول</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #2980b9, #6dd5fa);
+            font-family: Tahoma, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-box {
+            background: #fff;
+            width: 380px;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            text-align: center;
+        }
+
+        .hotel-name {
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        .hotel-sub {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 22px;
+            color: #34495e;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            background: #fafafa;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #2980b9;
+            border: none;
+            color: #fff;
+            border-radius: 6px;
+            font-size: 17px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #1f5f87;
+        }
+
+        .footer-text {
+            color: #777;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-box">
+
+        <div class="hotel-name">🏨 Sama Hotel</div>
+        <div class="hotel-sub">نظام إدارة الفندق</div>
+
+        <h2>🔐 تسجيل الدخول</h2>
+
+        <form method="POST">
+            <input type="text" name="username" placeholder="اسم المستخدم" required>
+            <input type="password" name="password" placeholder="كلمة المرور" required>
+
+            <button type="submit">دخول</button>
+        </form>
+
+        <p class="footer-text">© 2025 Sama Hotel Admin</p>
+    </div>
+
+</body>
+</html>

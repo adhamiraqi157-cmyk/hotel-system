@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>النظام المالي</title>
+    <style>
+        body { font-family: Tahoma; background: #f4f4f4; padding: 30px; }
+        h2, h3 { text-align: center; color: #2c3e50; }
+        form { background: white; padding: 20px; border-radius: 8px; width: 400px; margin: auto; box-shadow: 0 3px 10px #ccc; }
+        input, select, textarea { width: 100%; margin: 10px 0; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
+        button { width: 100%; padding: 10px; background: #27ae60; color: white; border: none; border-radius: 6px; cursor: pointer; }
+        table { width: 90%; margin: 30px auto; border-collapse: collapse; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: center; }
+        th { background: #2980b9; color: white; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        .delete-btn { background:#c0392b; color:white; border:none; padding:6px 10px; border-radius:5px; cursor:pointer; }
+    </style>
+</head>
+<body>
+
+    <h2>💰 النظام المالي للفندق</h2>
+
+    <!-- فورم إدخال عملية جديدة -->
+    <form method="POST">
+        <input type="date" name="date" required>
+
+        <select name="type">
+    <option value="income">إيراد</option>
+    <option value="expense">مصروف</option>
+</select>
+
+
+        <input type="number" step="0.01" name="amount" placeholder="المبلغ" required>
+
+        <select name="currency">
+            <option value="EGP">جنيه مصري (EGP)</option>
+            <option value="USD">دولار أمريكي (USD)</option>
+            <option value="EUR">يورو (EUR)</option>
+            <option value="SAR">ريال سعودي (SAR)</option>
+        </select>
+
+        <textarea name="description" placeholder="الوصف"></textarea>
+        <button type="submit">💾 حفظ العملية</button>
+    </form>
+
+
+    <!-- 🧾 جدول الإحصائيات حسب العملة -->
+    <h3>📊 ملخص الإيرادات والمصروفات حسب العملة</h3>
+    <table>
+        <tr>
+            <th>العملة</th>
+            <th>إجمالي الإيرادات</th>
+            <th>إجمالي المصروفات</th>
+            <th>الربح الصافي</th>
+        </tr>
+        {% for s in stats %}
+        <tr>
+            <td>{{ s.currency }}</td>
+            <td style="color:green;">{{ "%.2f"|format(s.income) }}</td>
+            <td style="color:red;">{{ "%.2f"|format(s.expense) }}</td>
+            <td style="color:blue;">{{ "%.2f"|format(s.profit) }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+
+    <!-- 🧾 جدول العمليات المالية -->
+    <h3>📅 العمليات المسجلة</h3>
+    <table>
+        <tr>
+            <th>التاريخ</th>
+            <th>النوع</th>
+            <th>المبلغ</th>
+            <th>العملة</th>
+            <th>الوصف</th>
+            <th>إجراء</th>
+        </tr>
+        {% for t in transactions %}
+        <tr>
+            <td>{{ t.date }}</td>
+            <td>{{ 'إيراد' if t.type == 'income' else 'مصروف' }}</td>
+            <td>{{ "%.2f"|format(t.amount) }}</td>
+            <td>{{ t.currency }}</td>
+            <td>{{ t.description }}</td>
+            <td style="white-space: nowrap;">
+    <div style="display: flex; gap: 5px; justify-content: center;">
+
+        <a href="{{ url_for('finance_edit', id=t.id) }}" style="text-decoration:none;">
+            <button style="background:#2980b9;color:white;border:none;padding:6px 10px;
+                           border-radius:5px;cursor:pointer;">✏️ تعديل</button>
+        </a>
+
+        <form method="POST" action="{{ url_for('finance_delete', id=t.id) }}" 
+              onsubmit="return confirm('هل أنت متأكد من حذف هذه العملية؟');"
+              style="margin: 0;">
+            <button type="submit" class="delete-btn"
+                    style="background:#c0392b;color:white;border:none;padding:6px 10px;
+                           border-radius:5px;cursor:pointer;">🗑 حذف</button>
+        </form>
+
+    </div>
+</td>
+
+        </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>

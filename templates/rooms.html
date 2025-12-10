@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <title>قائمة الغرف</title>
+
+    <style>
+        body {
+            font-family: "Tahoma", sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #2c3e50;
+            font-size: 26px;
+        }
+
+        .add-btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #27ae60;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 18px;
+        }
+
+        .room-card {
+            background: white;
+            padding: 18px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: 0.25s;
+        }
+
+        .room-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .room-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #34495e;
+            margin-bottom: 8px;
+        }
+
+        .room-info {
+            margin: 6px 0;
+            color: #555;
+            font-size: 15px;
+        }
+
+        .status-available { color: #27ae60; font-weight: bold; }
+        .status-booked { color: #c0392b; font-weight: bold; }
+        .status-maintenance { color: #f39c12; font-weight: bold; }
+
+        .actions {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .edit-btn, .delete-btn {
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .edit-btn { background: #2980b9; }
+        .edit-btn:hover { background: #1f6390; }
+
+        .delete-btn { background: #c0392b; }
+        .delete-btn:hover { background: #922b21; }
+
+        form { display: inline; }
+    </style>
+</head>
+<body>
+
+    <h2>🏨 قائمة الغرف</h2>
+
+    <a href="{{ url_for('room_add') }}" class="add-btn">➕ إضافة غرفة جديدة</a>
+
+    <div class="rooms-grid">
+
+        {% for r in rooms %}
+        <div class="room-card">
+
+            <div class="room-title">غرفة {{ r.number }}</div>
+
+            <div class="room-info"><strong>النوع:</strong> {{ r.type }}</div>
+            <div class="room-info"><strong>السعر:</strong> {{ r.price }} جنيه</div>
+
+            <div class="room-info">
+                <strong>الحالة:</strong>
+                {% if r.status == 'available' %}
+                    <span class="status-available">متاحة</span>
+                {% elif r.status == 'booked' %}
+                    <span class="status-booked">محجوزة</span>
+                {% else %}
+                    <span class="status-maintenance">صيانة</span>
+                {% endif %}
+            </div>
+
+            <div class="actions">
+                <a class="edit-btn" href="{{ url_for('room_edit', room_id=r.id) }}">✏ تعديل</a>
+
+                <form method="post" action="{{ url_for('room_delete', room_id=r.id) }}" 
+                      onsubmit="return confirm('هل تريد حذف هذه الغرفة؟');">
+                    <button class="delete-btn" type="submit">🗑 حذف</button>
+                </form>
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+</body>
+</html>
